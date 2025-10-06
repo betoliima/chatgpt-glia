@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Anton Font */
+@font-face {
+  font-family: 'Anton';
+  src: url('./assets/fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Mode */
+    --background: 210 20% 98%;
+    --foreground: 216 15% 26%;
+    --card: 0 0% 100%;
+    --card-foreground: 216 15% 26%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 15% 26%;
+    --primary: 212 88% 39%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 210 17% 95%;
+    --secondary-foreground: 216 15% 26%;
+    --muted: 210 17% 95%;
+    --muted-foreground: 216 15% 50%;
+    --accent: 180 94% 48%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 212 88% 39%;
+    --radius: 0.75rem;
+    
+    /* Logo Size - MUDE APENAS ESTE VALOR - v3 */
+    --logo-scale: 10; /* 1.0 = tamanho normal, 1.5 = 50% maior, 2.0 = 2x maior */
+  }
+
+  .dark {
+    /* Dark Mode */
+    --background: 216 20% 9%;
+    --foreground: 210 17% 95%;
+    --card: 216 18% 12%;
+    --card-foreground: 210 17% 95%;
+    --popover: 216 18% 12%;
+    --popover-foreground: 210 17% 95%;
+    --primary: 180 94% 48%;
+    --primary-foreground: 216 20% 9%;
+    --secondary: 216 15% 18%;
+    --secondary-foreground: 210 17% 95%;
+    --muted: 216 15% 18%;
+    --muted-foreground: 216 15% 65%;
+    --accent: 180 94% 48%;
+    --accent-foreground: 216 20% 9%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 17% 95%;
+    --border: 216 15% 18%;
+    --input: 216 15% 18%;
+    --ring: 180 94% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom animations */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.7s ease-out forwards;
+}
+
+/* Component-specific styles */
+.glia-logo {
+  height: 10rem;
+  width: auto;
+}
+
+/* Logo - SUPER SIMPLES: mude apenas --logo-scale na linha 41 */
+.glia-logo-enlarged {
+  height: 12rem;
+  width: auto;
+  transform: scale(var(--logo-scale));
+  transform-origin: center;
+}
+
+@media (min-width: 768px) {
+  .glia-logo-enlarged {
+    height: 14rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .glia-logo-enlarged {
+    height: 16rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .glia-logo {
+    height: 12rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .glia-logo {
+    height: 18rem;
+  }
+}
+
+.tagline-text {
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.main-container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  max-width: 48rem;
+  width: 100%;
+}
+
+/* Chat input fixado ao rodapé com afastamento confortável */
+.chat-input-fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 1rem 1.25rem; /* afastamento do fundo */
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* evita bloquear cliques fora do input */
+}
+
+.chat-input-fixed .chat-input-inner {
+  width: 100%;
+  max-width: 48rem; /* igual ao container principal */
+  pointer-events: auto; /* reativa cliques no input */
+}

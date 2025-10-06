@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="128" height="128" rx="24" fill="url(#gradient0_linear_1_1)"/>
+<path d="M64 40L48 64H64V40Z" fill="white"/>
+<path d="M64 40L80 64H64V40Z" fill="white"/>
+<path d="M48 64L64 88L80 64H48Z" fill="white"/>
+<text x="64" y="100" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-size="12" font-weight="600">GLIA</text>
+<defs>
+<linearGradient id="gradient0_linear_1_1" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+<stop stop-color="#1BE0D9"/>
+<stop offset="1" stop-color="#2368FF"/>
+</linearGradient>
+</defs>
+</svg>
