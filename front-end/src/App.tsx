@@ -1,9 +1,9 @@
-import ChatPage from './pages/ChatPage';
+import ChatLayoutLikeGPT from './components/ChatLayoutLikeGPT';
 
 function App() {
   return (
     <div className="App">
-      <ChatPage />
+      <ChatLayoutLikeGPT />
     </div>
   );
 }
