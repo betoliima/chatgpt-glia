@@ -1,6 +1,6 @@
 import TextoRico from './TextoRico';
 import CopyButton from './CopyButton';
-import gliaLogo from '../assets/logo_glia-removebg-preview.png';
+import gliaLogo from '../../assets/logo_glia-removebg-preview.png';
 
 type Props = {
   role: 'user' | 'assistant';

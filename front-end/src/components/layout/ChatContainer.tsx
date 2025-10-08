@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ChatMessage from './ChatMessage';
-import ChatInput from './ChatInput';
+import ChatMessage from '../ui/ChatMessage';
+import ChatInput from '../ui/ChatInput';
 
 interface Message {
   id: string;

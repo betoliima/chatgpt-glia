@@ -1,24 +1,23 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import MessageBubble from '../components/MessageBubble';
-import TypingIndicator from '../components/TypingIndicator';
+import MessageBubble from '../components/ui/MessageBubble';
+import TypingIndicator from '../components/ui/TypingIndicator';
+import { useChat } from '../hooks/useChat';
 import gliaLogo from '../assets/logo_glia-removebg-preview.png';
 
-type Role = 'assistant' | 'user';
-type ChatMessage = { id: string; role: Role; content: string };
-
 export default function ChatPage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]); // começa vazio
   const [input, setInput] = useState('');
-  const [isSending, setIsSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  // Usar o hook personalizado para gerenciar o chat
+  const { messages, isLoading, sendMessage } = useChat();
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-  }, [messages.length, isSending]);
+  }, [messages.length, isLoading]);
 
-  const canSend = useMemo(() => input.trim().length > 0 && !isSending, [input, isSending]);
+  const canSend = useMemo(() => input.trim().length > 0 && !isLoading, [input, isLoading]);
 
   const taglines = useMemo(
     () => [
@@ -44,27 +43,10 @@ export default function ChatPage() {
 
   async function handleSend() {
     if (!canSend) return;
-    const userMsg: ChatMessage = { id: crypto.randomUUID(), role: 'user', content: input.trim() };
-    setMessages((m) => [...m, userMsg]);
+    
+    const messageText = input.trim();
     setInput('');
-    setIsSending(true);
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMsg] }),
-      });
-      const data = await res.json();
-      const assistantText: string = data.reply; // ajuste a chave se necessário
-      const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: 'assistant', content: assistantText };
-      setMessages((m) => [...m, aiMsg]);
-    } catch (e) {
-      const aiMsg: ChatMessage = { id: crypto.randomUUID(), role: 'assistant', content: 'Desculpe, houve um erro ao processar sua mensagem.' };
-      setMessages((m) => [...m, aiMsg]);
-    } finally {
-      setIsSending(false);
-    }
+    await sendMessage(messageText);
   }
 
   const inputBox = (
@@ -132,7 +114,7 @@ export default function ChatPage() {
               {messages.map((m) => (
                 <MessageBubble key={m.id} role={m.role} content={m.content} />
               ))}
-              {isSending && (
+              {isLoading && (
                 <div className="flex w-full items-start gap-3">
                   <div className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-neutral-200 overflow-hidden">
                     <img src={gliaLogo} alt="GLIA" className="h-7 w-7 object-contain" />

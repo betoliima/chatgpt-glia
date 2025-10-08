@@ -9,23 +9,7 @@ import {
   Check,
   Loader2,
 } from "lucide-react";
-
-/**
- * ChatLayoutLikeGPT
- * - Layout inspirado no ChatGPT (header fixo, sidebar, área central com mensagens, textarea fixa)
- * - Enter = enviar | Shift+Enter = quebra linha
- * - Auto-scroll ao receber/enviar
- * - "Digitando…" com três bolinhas
- * - Botões: Enviar, Limpar
- * - Copiar conteúdo da mensagem
- *
- * IMPORTANTE:
- * - Substitua o BLOCO "MOCK (resposta de exemplo)" dentro do handleSend()
- *   pela sua chamada real ao backend (fetch("/api/chat", ...)).
- */
-
-type Role = "user" | "assistant";
-type Msg = { id: string; role: Role; content: string };
+import { useChat } from "../../hooks/useChat";
 
 function cls(...xs: Array<string | false | undefined>) {
   return xs.filter(Boolean).join(" ");
@@ -33,10 +17,11 @@ function cls(...xs: Array<string | false | undefined>) {
 
 export default function ChatLayoutLikeGPT() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  
+  // Usar o hook personalizado para gerenciar o chat
+  const { messages, isLoading, sendMessage, clearMessages } = useChat();
 
   const listRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -46,7 +31,7 @@ export default function ChatLayoutLikeGPT() {
     const el = listRef.current;
     if (!el) return;
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages, isLoading]);
 
   // Foco inicial na textarea
   useEffect(() => {
@@ -62,44 +47,14 @@ export default function ChatLayoutLikeGPT() {
 
   async function handleSend() {
     const text = input.trim();
-    if (!text || loading) return;
+    if (!text || isLoading) return;
 
-    const userMsg: Msg = { id: crypto.randomUUID(), role: "user", content: text };
-    setMessages((prev) => [...prev, userMsg]);
     setInput("");
-    setLoading(true);
-
-    try {
-      // Chamada real ao backend
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
-      });
-      const data = await res.json();
-      const assistantText = data.reply ?? "Sem resposta.";
-
-      const assistantMsg: Msg = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: assistantText,
-      };
-      setMessages((prev) => [...prev, assistantMsg]);
-    } catch (err) {
-      const errorMsg: Msg = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: "Erro ao obter resposta. Tente novamente.",
-      };
-      setMessages((prev) => [...prev, errorMsg]);
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    await sendMessage(text);
   }
 
   function handleClear() {
-    setMessages([]);
+    clearMessages();
     setInput("");
     inputRef.current?.focus();
   }
@@ -237,7 +192,7 @@ export default function ChatLayoutLikeGPT() {
             })}
 
             {/* Indicador de digitando… */}
-            {loading && (
+            {isLoading && (
               <div className="flex items-center gap-3">
                 <div className="size-8 rounded-full bg-neutral-200 flex items-center justify-center">
                   <Bot className="size-4 text-neutral-700" />
@@ -273,13 +228,13 @@ export default function ChatLayoutLikeGPT() {
                 <span>Enter para enviar • Shift+Enter para quebrar linha</span>
                 <button
                   onClick={() => void handleSend()}
-                  disabled={loading || !input.trim()}
+                  disabled={isLoading || !input.trim()}
                   className={cls(
                     "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-neutral-700 border border-neutral-200 bg-neutral-50 hover:bg-neutral-100",
-                    loading && "opacity-60"
+                    isLoading && "opacity-60"
                   )}
                 >
-                  {loading ? (
+                  {isLoading ? (
                     <>
                       <Loader2 className="size-4 animate-spin" />
                       Enviando…

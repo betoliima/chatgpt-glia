@@ -1,4 +1,4 @@
-import ChatLayoutLikeGPT from './components/ChatLayoutLikeGPT';
+import ChatLayoutLikeGPT from './components/layout/ChatLayoutLikeGPT';
 
 function App() {
   return (
