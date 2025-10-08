@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import MessageBubble from '../components/ui/MessageBubble';
 import TypingIndicator from '../components/ui/TypingIndicator';
 import { useChat } from '../hooks/useChat';
 import gliaLogo from '../assets/logo_glia-removebg-preview.png';
@@ -87,11 +86,11 @@ export default function ChatPage() {
       {/* Header fixo no topo */}
       <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="mx-auto flex max-w-4xl items-center justify-center px-4 py-3">
-          {/* Espaço reservado para imagem no topo */}
-          <div className="h-10">
-            <img src={gliaLogo} alt="Topo" className="h-10 object-contain" />
+          {/* Logo GLIA no header */}
+          <div className="flex items-center gap-2">
+            <img src={gliaLogo} alt="GLIA" className="h-8 w-8 object-contain" />
+            <div className="text-sm font-medium text-neutral-900">GLIA Intelligence</div>
           </div>
-          <div className="text-sm font-medium text-neutral-900">Intelligence</div>
         </div>
       </header>
 
@@ -112,14 +111,33 @@ export default function ChatPage() {
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-1 sm:px-2">
             <div className="mx-auto max-w-3xl space-y-6 py-6">
               {messages.map((m) => (
-                <MessageBubble key={m.id} role={m.role} content={m.content} />
+                <div key={m.id} className={`flex w-full gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {/* Avatar GLIA */}
+                  {m.role === 'assistant' && (
+                    <div className="mt-1 inline-flex h-6 w-6 items-center justify-center overflow-hidden">
+                      <img src={gliaLogo} alt="GLIA" className="h-6 w-6 object-contain" />
+                    </div>
+                  )}
+                  
+                  {/* Texto simples sem balão */}
+                  <div className="max-w-[85%] text-[15px] leading-relaxed">
+                    <div className="whitespace-pre-wrap">{m.content}</div>
+                  </div>
+                  
+                  {/* Avatar do usuário */}
+                  {m.role === 'user' && (
+                    <div className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-200 text-neutral-700">
+                      <span className="text-[10px] font-medium">Você</span>
+                    </div>
+                  )}
+                </div>
               ))}
               {isLoading && (
                 <div className="flex w-full items-start gap-3">
-                  <div className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-neutral-200 overflow-hidden">
-                    <img src={gliaLogo} alt="GLIA" className="h-7 w-7 object-contain" />
+                  <div className="mt-1 inline-flex h-6 w-6 items-center justify-center overflow-hidden">
+                    <img src={gliaLogo} alt="GLIA" className="h-6 w-6 object-contain" />
                   </div>
-                  <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-neutral-200 bg-neutral-50 px-4 py-3 shadow-sm">
+                  <div className="text-[15px]">
                     <TypingIndicator />
                   </div>
                 </div>
